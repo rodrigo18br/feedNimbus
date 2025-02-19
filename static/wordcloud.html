@@ -1,0 +1,67 @@
+<html>
+<head>
+  <title>FeedNimbus</title>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="headlines.css">
+  <link rel="stylesheet" type="text/css" href="loading.css">
+  <link rel="stylesheet" type="text/css" href="settings.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script src="wordcloud.js" type="module"></script>
+  <script src="headlines.js"></script>
+</head>
+
+<body>
+   <div class="header-container">
+    <header>
+      <div class="header-start">
+        <div class="drop-down" id="drop-down">
+          <span class="material-symbols-outlined" id="settings-icon" title="Settings">
+            settings
+          </span>
+        </div>
+        <div class="reload" id="reload">
+          <span class="material-symbols-outlined" id="reload-icon" title="Refresh">
+            refresh
+          </span>
+        </div>
+      </div>
+    </header>
+  </div>
+  <div class="info-container" id="info">
+  </div>
+  <div class="container">
+    <div id="box-left" class="box">
+      <div class="ring ring-left" id="loading-words"></div>
+      <div id="wordcloud"></div>
+      <div id="feeds">
+        <div id="feed-title" class="title">Your Feeds</div>
+        <div class="form-group">
+            <textarea id="feedlist" class="c-feedlist" rows="5" cols="33"></textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" id="confirmFeeds">Confirm</button>
+        </div>
+      </div>
+    </div>
+    <div id="box-right" class="box">
+      <div class="ring ring-right" id="loading-headlines"></div>
+      <div id="headlines" class="box">
+        <div id="headlines-title" class="title">Click on a word to see related news!</div>
+        <ul id="newslist" class="c-newslist"></ul>
+      </div>
+      <div id="words">
+        <div id="feed-title" class="title">Filtered Words</div>
+        <div class="form-group">
+            <textarea id="stopwords" class="c-stopwords" rows="5" cols="33"></textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" id="confirmStopwords">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
