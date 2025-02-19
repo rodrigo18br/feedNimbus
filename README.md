@@ -13,12 +13,14 @@ Simplicity is a concern here. The UI seeks to be minimalist and no frameworks ar
 2. Install dependencies with pipenv
 
 ```bash
-pipenv install```
+pipenv install
+```
 
 3. Run
 
 ```bash
-pipenv run python3 app.py```
+pipenv run python3 app.py
+```
 
 4. Click on _Settings_ and set up your feedlist and, optionally, a list of stopwords;
 
