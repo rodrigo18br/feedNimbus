@@ -61,32 +61,11 @@ function showSettings() {
   const stopwords = document.getElementById("stopwords");
 
   feedlist.innerHTML = "";
-  
-  fetch("http://127.0.0.1:5000/feeds", {
-    method: 'get',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json;charset=utf-8',
-    },
-  })
-    .then(response => response.json())
-    .then(response => {
-      const urls = response.feeds;
-      feedlist.value = urls.join("\n");
-    });
+  feeds = cookieManager.get("feeds");
+  words = cookieManager.get("stopwords");
 
-    fetch("http://127.0.0.1:5000/stopwords", {
-    method: 'get',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json;charset=utf-8',
-    },
-  })
-    .then(response => response.json())
-    .then(response => {
-      const sw = response.stopwords;
-      stopwords.value = sw.join("\n");
-    });
+  feedlist.value = feeds.join("\n");
+  stopwords.value = words.join("\n");
 }
 
 function sendStopwords() {
@@ -97,18 +76,7 @@ function sendStopwords() {
   info.style.display = "block";
 
   const stopwordsList = stopwords.split("\n");
-  fetch("http://127.0.0.1:5000/stopwords", {
-    method: 'post',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json;charset=utf-8',
-    },
-    body: JSON.stringify({
-      words: stopwordsList,
-    })
-  })
-    .then(response => response.json())
-    .then(response => {});
+  cookieManager.set("stopwords", stopwordsList);
 }
 
 function sendFeeds() {
@@ -120,18 +88,7 @@ function sendFeeds() {
 
   const feeds = feedsElement.value;
   const feedsList = feeds.split("\n");
-  fetch("http://127.0.0.1:5000/feeds", {
-    method: 'post',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json;charset=utf-8',
-    },
-    body: JSON.stringify({
-      feeds: feedsList,
-    })
-  })
-    .then(response => response.json())
-    .then(response => {});
+  cookieManager.set("feeds", feedsList);
 }
 
 function getWords() {
@@ -153,9 +110,12 @@ function getWords() {
   
   title.innerHTML = "";
   newslist.innerHTML = "";
+  feeds = cookieManager.get("feeds");
+  words = cookieManager.get("stopwords");
 
   fetch("http://127.0.0.1:5000/wordcloud", {
     method: 'post',
+    body: JSON.stringify({feeds, words}),
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json;charset=utf-8',
