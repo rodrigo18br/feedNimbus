@@ -111,6 +111,10 @@ function getWords() {
   title.innerHTML = "";
   newslist.innerHTML = "";
   feeds = cookieManager.get("feeds");
+  if (!feeds) {
+    showSettings();
+    return;
+  }
   words = cookieManager.get("stopwords");
 
   fetch("http://127.0.0.1:5000/wordcloud", {
