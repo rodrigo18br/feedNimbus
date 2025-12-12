@@ -1,14 +1,3 @@
-#box-left {
-  margin-right: 10px;
-  margin-left: 50px;
-}
-
-.box {
-  background-color: rgb(255, 255, 255);
-  border-radius: 2%;
-  min-height: 100px;
-}
-
 .form-group {
   margin-bottom: 1rem;
 }
@@ -71,4 +60,10 @@
   font-size: 1rem;
   margin-bottom: 1.5rem;
   line-height: 1.5;
+}
+
+textarea, button {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }

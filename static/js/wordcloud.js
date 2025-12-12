@@ -6,7 +6,7 @@ function controlElementsVisibility(elements) {
 
 function createWordCloud(words) {
   const cloudLayout = d3.layout.cloud()
-    .size([700, 450])
+    .size([550, 450])
     .padding(1.2)
     .rotate(() => 0)
     .font("Impact")
@@ -20,10 +20,10 @@ function draw(words) {
   d3.select("#wordcloud")
     .html('')
     .append("svg")
-    .attr("width", 600)
+    .attr("width", 550)
     .attr("height", 450)
     .append("g")
-    .attr("transform", "translate(300,200)")
+    .attr("transform", "translate(250,220)")
     .selectAll("text")
     .data(words)
     .enter()
