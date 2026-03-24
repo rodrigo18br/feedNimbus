@@ -1,4 +1,4 @@
-body{
+body {
   font-family: "Helvetica";
   background-color: #f2f2f2;
 }
@@ -104,4 +104,9 @@ body{
 
 #settings-icon, #reload-icon {
   cursor: pointer;
+}
+
+.comhead {
+  font-size: 10pt;
+  color: #828282;
 }
