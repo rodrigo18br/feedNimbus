@@ -1,3 +1,6 @@
+import {buildTopics, fetchFeeds} from "./feed-reader.js";
+import {getHeadlines} from "./headlines.js";
+
 function controlElementsVisibility(elements) {
   for (const element of elements) {
     document.getElementById(element.id).style.display = element.show ? "block" : "none";
@@ -40,9 +43,9 @@ function draw(words) {
     .on("mouseleave", function() {
       d3.select(this).style("text-decoration", "none");
     })
-    .on("click", d => {
-      console.log("Clicked on word:", d.target.textContent, window.location);
-      getHeadlines(d.target.textContent, headlineData[d.target.textContent]);
+    .on("click", event => {
+      const word = event.target.textContent;
+      getHeadlines(word, headlineData[word]);
     });
 }
 
@@ -60,9 +63,8 @@ function showSettings() {
   const feedlist = document.getElementById("feedlist");
   const stopwords = document.getElementById("stopwords");
 
-  feedlist.innerHTML = "";
-  feeds = cookieManager.get("feeds");
-  words = cookieManager.get("stopwords");
+  const feeds = cookieManager.get("feeds") || [];
+  const words = cookieManager.get("stopwords") || [];
 
   feedlist.value = feeds.join("\n");
   stopwords.value = words.join("\n");
@@ -75,7 +77,7 @@ function sendStopwords() {
   info.innerHTML = "<h2>Word filters updated successfully!</h2>";
   info.style.display = "block";
 
-  const stopwordsList = stopwords.split("\n");
+  const stopwordsList = splitSettings(stopwords);
   cookieManager.set("stopwords", stopwordsList);
 }
 
@@ -87,11 +89,24 @@ function sendFeeds() {
   info.style.display = "block";
 
   const feeds = feedsElement.value;
-  const feedsList = feeds.split("\n");
+  const feedsList = splitSettings(feeds);
   cookieManager.set("feeds", feedsList);
 }
 
-function getWords() {
+function splitSettings(value) {
+  return value.split("\n").map(item => item.trim()).filter(Boolean);
+}
+
+function showFeedErrors(errors, hasArticles) {
+  const info = document.getElementById("info");
+  const message = hasArticles
+    ? `Some feeds could not be loaded (${errors.length}).`
+    : "No feeds could be loaded. Check the feed URLs and their CORS settings.";
+  info.replaceChildren(Object.assign(document.createElement("h2"), {textContent: message}));
+  info.style.display = "block";
+}
+
+async function getWords() {
   controlElementsVisibility([
     {id: "loading-headlines", show: false},
     {id: "loading-words", show: true},
@@ -103,40 +118,34 @@ function getWords() {
     {id: "info", show: false},
   ]);
 
-  const loadingWords = document.getElementById("loading-words");
-  const wordCloud = document.getElementById("wordcloud");
   const newslist = document.getElementById("newslist");
   const title = document.getElementById("headlines-title");
   
-  title.innerHTML = "";
+  title.textContent = "";
   newslist.innerHTML = "";
-  feeds = cookieManager.get("feeds");
-  if (!feeds) {
+  const feeds = (cookieManager.get("feeds") || []).filter(Boolean);
+  if (feeds.length === 0) {
     showSettings();
     return;
   }
-  words = cookieManager.get("stopwords");
+  const stopwords = (cookieManager.get("stopwords") || []).filter(Boolean);
 
-  fetch("http://127.0.0.1:5000/wordcloud", {
-    method: 'post',
-    body: JSON.stringify({feeds, words}),
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json;charset=utf-8',
-    },
-  })
-    .then(response => response.json())
-    .then(response => {
-      const result = response.words;
-      const words = Object.keys(result).map(word => ({ text: word, size: 20 }));
-      createWordCloud(words);
-      Object.assign(headlineData, result);
-      controlElementsVisibility([
-        {id: "loading-words", show: false},
-        {id: "wordcloud", show: true},
-      ]);
-      title.innerHTML = "Click on a word to see related news!";
-    });
+  const {articles, errors} = await fetchFeeds(feeds);
+  const result = buildTopics(articles, stopwords, window.nlp);
+  const cloudWords = Object.keys(result).map(word => ({text: word, size: 20}));
+
+  Object.keys(headlineData).forEach(word => delete headlineData[word]);
+  Object.assign(headlineData, result);
+  createWordCloud(cloudWords);
+  controlElementsVisibility([
+    {id: "loading-words", show: false},
+    {id: "wordcloud", show: true},
+  ]);
+  title.textContent = "Click on a word to see related news!";
+
+  if (errors.length > 0) {
+    showFeedErrors(errors, articles.length > 0);
+  }
 }
 
 addEventListener("load", () => {
@@ -152,4 +161,3 @@ addEventListener("load", () => {
 
   getWords();
 });
-

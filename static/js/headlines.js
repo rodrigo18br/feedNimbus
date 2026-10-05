@@ -1,4 +1,10 @@
-function getHeadlines(word, news) {
+/**
+ * Render the news headlines associated with a word.
+ *
+ * @param {string} word - Word selected in the word cloud.
+ * @param {{title: string, link: string}[]} news - Related news articles.
+ */
+export function getHeadlines(word, news) {
   const title = document.getElementById("headlines-title");
   const loadingHeadlines = document.getElementById("loading-headlines");
   const headlines = document.getElementById("headlines");
@@ -7,7 +13,7 @@ function getHeadlines(word, news) {
 
   loadingHeadlines.style.display = "block";
   headlines.style.display = "none";
-  title.innerHTML = word;
+  title.textContent = word;
 
   newslist.innerHTML = "";
 
@@ -25,8 +31,9 @@ function getHeadlines(word, news) {
     a.href = headline.link;
     a.textContent = headline.title;
     a.target = "_blank";
-    span.textContent = ` (${headline.link.split("/")[2]})`;
-    img.src = `http://${headline.link.split("/")[2]}/favicon.ico`;
+    const articleUrl = new URL(headline.link);
+    span.textContent = ` (${articleUrl.hostname})`;
+    img.src = `${articleUrl.origin}/favicon.ico`;
     img.height = img.width = imgSize;
     element.appendChild(img);
     element.appendChild(a);
