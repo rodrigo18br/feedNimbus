@@ -1,0 +1,10 @@
+[build]
+  publish = "static"
+
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/"
+  to = "/wordcloud.html"
+  status = 200
