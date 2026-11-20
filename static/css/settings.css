@@ -22,7 +22,7 @@
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
 }
 
-.form-group button {
+.welcome button,.form-group button {
   width: 100%;
   padding: 0.75rem;
   background-color: #007bff;
@@ -34,7 +34,7 @@
   transition: background-color 0.3s;
 }
 
-.form-group button:hover {
+.welcome button,.form-group button:hover {
     background-color: #0056b3;
 }
 
