@@ -35,7 +35,13 @@
   </div>
   <div class="info-container" id="info">
   </div>
-  <div class="container">
+  <main id="welcome" class="welcome" aria-labelledby="welcome-title">
+    <h1 id="welcome-title">FeedNimbus</h1>
+    <p>FeedNimbus is a feed client that seeks to improve content exploration presenting feed items grouped not by source, but by subject. The main topics are extracted from all items, and shown in a wordcloud. Also, this content presentation has the aim to avoid the scrolling prevalent in most social media.</p>
+    <p>Simplicity is a concern here. The UI seeks to be minimalist and no frameworks are used.</p>
+    <button type="submit" id="configFeeds">Go to first configuration</button>
+  </main>
+  <div id="content" class="container">
     <div id="box-left" class="box">
       <div class="loading" id="loading-words"></div>
       <div id="wordcloud"></div>

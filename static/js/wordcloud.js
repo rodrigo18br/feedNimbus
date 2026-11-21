@@ -3,7 +3,9 @@ import {getHeadlines} from "./headlines.js";
 
 function controlElementsVisibility(elements) {
   for (const element of elements) {
-    document.getElementById(element.id).style.display = element.show ? "block" : "none";
+    document.getElementById(element.id).style.display = element.show
+      ? element.display || "block"
+      : "none";
   }
 }
 
@@ -53,6 +55,8 @@ const headlineData = {};
 
 function showSettings() {
   controlElementsVisibility([
+    {id: "welcome", show: false},
+    {id: "content", show: true, display: "flex"},
     {id: "loading-words", show: false},
     {id: "wordcloud", show: false},
     {id: "headlines", show: false},
@@ -68,6 +72,14 @@ function showSettings() {
 
   feedlist.value = feeds.join("\n");
   stopwords.value = words.join("\n");
+}
+
+function showWelcome() {
+  controlElementsVisibility([
+    {id: "info", show: false},
+    {id: "welcome", show: true},
+    {id: "content", show: false},
+  ]);
 }
 
 function sendStopwords() {
@@ -108,6 +120,8 @@ function showFeedErrors(errors, hasArticles) {
 
 async function getWords() {
   controlElementsVisibility([
+    {id: "welcome", show: false},
+    {id: "content", show: true, display: "flex"},
     {id: "loading-headlines", show: false},
     {id: "loading-words", show: true},
     {id: "wordcloud", show: false},
@@ -125,7 +139,7 @@ async function getWords() {
   newslist.innerHTML = "";
   const feeds = (cookieManager.get("feeds") || []).filter(Boolean);
   if (feeds.length === 0) {
-    showSettings();
+    showWelcome();
     return;
   }
   const stopwords = (cookieManager.get("stopwords") || []).filter(Boolean);
@@ -153,8 +167,10 @@ addEventListener("load", () => {
   const reload = document.getElementById("reload-icon");
   const buttonStopwords = document.getElementById("confirmStopwords");
   const buttonFeeds = document.getElementById("confirmFeeds");
+  const buttonConfig = document.getElementById("configFeeds");
 
   menu.addEventListener("click", showSettings);
+  buttonConfig.addEventListener("click", showSettings);
   reload.addEventListener("click", getWords);
   buttonStopwords.addEventListener("click", sendStopwords);
   buttonFeeds.addEventListener("click", sendFeeds);
